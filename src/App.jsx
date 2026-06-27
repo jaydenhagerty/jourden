@@ -68,7 +68,7 @@ function App() {
   return (
     <main className="relative">
       <nav className="sticky top-0 left-0 w-full flex flex-col z-10">
-        <div className="w-full flex justify-between bg-bg">
+        <div className="w-full flex justify-between bg-bg h-20">
           <h1 className={`text-4xl font-fancy ${user ? "opacity-0" : "text-b3"}`}>
             Jourden
           </h1>
@@ -79,8 +79,8 @@ function App() {
                 onClick={saveEntry}
                 className="p-4 text-b3 rounded-lg cursor-pointer flex flex-col items-center"
               >
-                <FontAwesomeIcon icon={faFloppyDisk} className="text-2xl" />
-                Save
+                <FontAwesomeIcon icon={faFloppyDisk} className="text-4xl" />
+                {/* Save */}
               </button>
             </div>
           )}
