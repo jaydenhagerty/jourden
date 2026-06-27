@@ -7,11 +7,21 @@
     --font-sans: "Roboto Mono", monospace;
 
     --color-bg: #181c25;
-    --color-b2: #1f2833;
+    --color-b2: #19212b;
     --color-b3: #2e3d50;
     --color-fg: #ffffff;
 }
 
 body {
     @apply bg-bg text-fg font-sans;
+}
+
+.textbox-editable {
+    position: relative;
+}
+
+.textbox-editable.textbox-empty::before {
+    content: attr(data-placeholder);
+    color: var(--color-b3);
+    pointer-events: none;
 }

@@ -4,7 +4,11 @@ function normalizeNewlines(text) {
   return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 }
 
-export default function TextBox({ value, onChange }) {
+export default function TextBox({
+  value,
+  onChange,
+  placeholder = "Start writing...",
+}) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -38,22 +42,26 @@ export default function TextBox({ value, onChange }) {
       ref={ref}
       // inputMode="none"
       contentEditable
+      data-placeholder={placeholder}
       suppressContentEditableWarning
       onInput={(e) => onChange(normalizeNewlines(e.currentTarget.innerText))}
-      className="
+      className={`
         border-none
         outline-none
         bg-b2
         focus:bg-transparent
-        transition-colors
+        transition-all
         duration-300
         ease-in-out
         w-full
         h-full
-        py-8
+        focus:py-8
+        py-4
         px-4
         rounded-lg
-      "
+        textbox-editable
+        ${value ? "" : "textbox-empty"}
+      `}
     />
   );
 }

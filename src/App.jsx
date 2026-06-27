@@ -15,11 +15,13 @@ import {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [text, setText] = useState("");
 
   useEffect(() => {
     const unsubscribe = listenForAuth((user) => {
       setUser(user);
+      setAuthLoading(false);
     });
 
     return unsubscribe;
@@ -54,28 +56,40 @@ function App() {
     setText(""); // clear after save
   }
 
+  if (authLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-bg text-fg">
+        <div className="text-center">
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="relative">
-      <nav className="fixed top-0 left-0 w-full flex justify-between">
-        <h1 className={`text-4xl font-fancy ${user ? "opacity-0" : "text-b3"}`}>
-          Jourden
-        </h1>
-        
-        {user && (
-          <div className="flex gap-2">
-            <button
-              onClick={saveEntry}
-              className="p-4 text-b3 rounded-lg cursor-pointer flex flex-col items-center"
-            >
-              <FontAwesomeIcon icon={faFloppyDisk} className="text-2xl" />
-              Save
-            </button>
-          </div>
-        )}
+      <nav className="sticky top-0 left-0 w-full flex flex-col z-10">
+        <div className="w-full flex justify-between bg-bg">
+          <h1 className={`text-4xl font-fancy ${user ? "opacity-0" : "text-b3"}`}>
+            Jourden
+          </h1>
+          
+          {user && (
+            <div className="flex gap-2">
+              <button
+                onClick={saveEntry}
+                className="p-4 text-b3 rounded-lg cursor-pointer flex flex-col items-center"
+              >
+                <FontAwesomeIcon icon={faFloppyDisk} className="text-2xl" />
+                Save
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="bg-linear-to-b from-bg to-transparent w-full h-16"></div>
       </nav>
 
-      <div className="flex justify-center items-center min-h-screen px-3">
-        <div className="w-full max-w-[700px] text-3xl">
+      <div className="flex justify-center items-center px-4 py-8">
+        <div className="w-full max-w-[1200px] text-3xl">
           {user ? (
             <TextBox value={text} onChange={setText} />
           ) : (
