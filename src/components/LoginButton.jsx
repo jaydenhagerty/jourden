@@ -12,7 +12,7 @@ export default function LoginButton({ onSignIn }) {
 
   return (
     <div className="absolute top-0 left-0 w-full h-full text-2xl flex flex-col justify-center items-center gap-6">
-        <button onClick={handleSignIn} className="p-6 cursor-pointer bg-b2 text-t1 rounded-3xl flex gap-4 border-2 border-b3 items-center drop-shadow-xl transition-all hover:scale-105 hover:bg-b3 hover:border-b4">
+        <button onClick={handleSignIn} className="p-6 cursor-pointer bg-b2 text-t1 rounded-3xl flex gap-4 border-2 border-b3 items-center drop-shadow-xl transition-all hover:scale-105 hover:bg-b3 hover:border-b4 active:scale-105 active:bg-b3 active:border-b4">
           <FontAwesomeIcon icon={faUser} />
           Sign in
         </button>

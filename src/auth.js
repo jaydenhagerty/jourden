@@ -1,27 +1,56 @@
 import {
   signInWithPopup,
   signInWithRedirect,
+  getRedirectResult,
   onAuthStateChanged,
   browserLocalPersistence,
+  browserSessionPersistence,
   setPersistence,
 } from "firebase/auth";
 import { auth, googleProvider } from "./firebase.js";
 
-setPersistence(auth, browserLocalPersistence).catch(() => {
-  // Keep sign-in usable even if persistence setup is unavailable.
-});
+let persistencePromise;
+
+function ensurePersistence() {
+  if (!persistencePromise) {
+    persistencePromise = setPersistence(auth, browserLocalPersistence).catch(() =>
+      setPersistence(auth, browserSessionPersistence)
+    );
+  }
+
+  return persistencePromise;
+}
+
+// Start persistence setup early, but keep sign-in click path gesture-safe.
+void ensurePersistence();
 
 export async function signInWithGoogle() {
-  const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
+  } catch (error) {
+    const code = error?.code || "";
+    const shouldFallbackToRedirect =
+      code === "auth/popup-blocked" ||
+      code === "auth/popup-closed-by-user" ||
+      code === "auth/cancelled-popup-request";
 
-  if (isMobileDevice) {
+    if (!shouldFallbackToRedirect) {
+      throw error;
+    }
+
+    await ensurePersistence();
     await signInWithRedirect(auth, googleProvider);
     return null;
   }
+}
 
-  const result = await signInWithPopup(auth, googleProvider);
-
-  return result.user;
+export async function consumeRedirectResult() {
+  try {
+    return await getRedirectResult(auth);
+  } catch {
+    return null;
+  }
 }
 
 export function listenForAuth(callback) {

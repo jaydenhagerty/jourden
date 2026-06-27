@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import LoginButton from "./components/LoginButton";
 import TextBox from "./components/TextBox";
-import { listenForAuth } from "./auth.js";
+import { consumeRedirectResult, listenForAuth } from "./auth.js";
 import { db } from "./firebase.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +20,8 @@ function App() {
   const [text, setText] = useState("");
 
   useEffect(() => {
+    void consumeRedirectResult();
+
     const unsubscribe = listenForAuth((user) => {
       setUser(user);
       setAuthLoading(false);
