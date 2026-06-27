@@ -43,7 +43,7 @@ export default function TextBox({ value, onChange }) {
       className="
         border-none
         outline-none
-        bg-secondary
+        bg-b2
         focus:bg-transparent
         transition-colors
         duration-300

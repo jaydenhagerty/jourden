@@ -3,6 +3,8 @@ import LoginButton from "./components/LoginButton";
 import TextBox from "./components/TextBox";
 import { listenForAuth } from "./auth.js";
 import { db } from "./firebase.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFloppyDisk, faUser } from "@fortawesome/free-solid-svg-icons";
 import {
   doc,
   setDoc,
@@ -54,23 +56,18 @@ function App() {
 
   return (
     <main className="relative">
-      <nav className="fixed top-0 left-0 w-full flex justify-between p-2">
-        <h1 className="text-4xl font-fancy opacity-0">
+      <nav className="fixed top-0 left-0 w-full flex justify-between">
+        <h1 className={`text-4xl font-fancy ${user ? "opacity-0" : "text-b3"}`}>
           Jourden
         </h1>
         
         {user && (
           <div className="flex gap-2">
-            {/* <button
-              className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
-            >
-              Save
-            </button> */}
-            
             <button
               onClick={saveEntry}
-              className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
+              className="p-4 text-b3 rounded-lg cursor-pointer flex flex-col items-center"
             >
+              <FontAwesomeIcon icon={faFloppyDisk} className="text-2xl" />
               Save
             </button>
           </div>
