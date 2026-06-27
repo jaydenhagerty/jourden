@@ -1,4 +1,4 @@
-import { signInWithGoogle } from "../auth";
+import { signInWithGoogle } from "../auth.js";
 
 export default function LoginButton({ onSignIn }) {
   async function handleSignIn() {
@@ -7,8 +7,10 @@ export default function LoginButton({ onSignIn }) {
   }
 
   return (
-    <button onClick={handleSignIn}>
-      Sign in with Google
-    </button>
+    <div className="flex justify-center">
+      <button onClick={handleSignIn} className="p-8 cursor-pointer">
+        Sign in
+      </button>
+    </div>
   );
 }

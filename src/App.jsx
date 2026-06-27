@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import LoginButton from "./components/LoginButton";
 import TextBox from "./components/TextBox";
+import { listenForAuth } from "./auth.js";
+import { db } from "./firebase.js";
 import {
-  getFirestore,
   doc,
   setDoc,
   addDoc,
@@ -10,11 +11,17 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-const db = getFirestore();
-
 function App() {
   const [user, setUser] = useState(null);
   const [text, setText] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = listenForAuth((user) => {
+      setUser(user);
+    });
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -47,12 +54,31 @@ function App() {
 
   return (
     <main className="relative">
-      <h1 className="text-4xl font-fancy fixed top-0 left-0 px-3 py-2">
-        Jourden
-      </h1>
+      <nav className="fixed top-0 left-0 w-full flex justify-between p-2">
+        <h1 className="text-4xl font-fancy opacity-0">
+          Jourden
+        </h1>
+        
+        {user && (
+          <div className="flex gap-2">
+            {/* <button
+              className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
+            >
+              Save
+            </button> */}
+            
+            <button
+              onClick={saveEntry}
+              className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
+            >
+              Save
+            </button>
+          </div>
+        )}
+      </nav>
 
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="w-full max-w-[700px]">
+      <div className="flex justify-center items-center min-h-screen px-3">
+        <div className="w-full max-w-[700px] text-3xl">
           {user ? (
             <TextBox value={text} onChange={setText} />
           ) : (
@@ -61,14 +87,7 @@ function App() {
         </div>
       </div>
 
-      {user && (
-        <button
-          onClick={saveEntry}
-          className="fixed bottom-6 right-6 px-4 py-2 bg-black text-white rounded-lg"
-        >
-          Save
-        </button>
-      )}
+      
     </main>
   );
 }

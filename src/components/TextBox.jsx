@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react";
 
+function normalizeNewlines(text) {
+  return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
 export default function TextBox({ value, onChange }) {
   const ref = useRef(null);
 
@@ -24,7 +28,7 @@ export default function TextBox({ value, onChange }) {
   // sync external value -> DOM
   useEffect(() => {
     if (!ref.current) return;
-    if (ref.current.innerText !== value) {
+    if (normalizeNewlines(ref.current.innerText) !== normalizeNewlines(value)) {
       ref.current.innerText = value;
     }
   }, [value]);
@@ -32,16 +36,23 @@ export default function TextBox({ value, onChange }) {
   return (
     <p
       ref={ref}
+      // inputMode="none"
       contentEditable
       suppressContentEditableWarning
-      onInput={(e) => onChange(e.currentTarget.innerText)}
+      onInput={(e) => onChange(normalizeNewlines(e.currentTarget.innerText))}
       className="
         border-none
         outline-none
+        bg-secondary
+        focus:bg-transparent
+        transition-colors
+        duration-300
+        ease-in-out
         w-full
         h-full
-        py-20
+        py-8
         px-4
+        rounded-lg
       "
     />
   );
