@@ -5,7 +5,9 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 export default function LoginButton({ onSignIn }) {
   async function handleSignIn() {
     const user = await signInWithGoogle();
-    onSignIn?.(user);
+    if (user) {
+      onSignIn?.(user);
+    }
   }
 
   return (

@@ -4,8 +4,30 @@ function normalizeNewlines(text) {
   return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 }
 
-function scrollToBottom() {
-  window.scrollTo({ top: document.body.scrollHeight });
+function scrollToBottom(target) {
+  const scrollingElement =
+    document.scrollingElement || document.documentElement || document.body;
+
+  const runScroll = () => {
+    target?.scrollIntoView({ block: "end", inline: "nearest" });
+
+    const maxScrollTop = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      scrollingElement.scrollHeight
+    );
+
+    window.scrollTo(0, maxScrollTop);
+    scrollingElement.scrollTop = maxScrollTop;
+    document.documentElement.scrollTop = maxScrollTop;
+    document.body.scrollTop = maxScrollTop;
+  };
+
+  // iOS Safari may need repeated attempts while keyboard/viewport settles.
+  runScroll();
+  requestAnimationFrame(runScroll);
+  setTimeout(runScroll, 120);
+  setTimeout(runScroll, 260);
 }
 
 export default function TextBox({
@@ -52,7 +74,6 @@ export default function TextBox({
         contentEditable
         data-placeholder={placeholder}
         suppressContentEditableWarning
-        // onFocus={scrollToBottom}
         onInput={(e) => {
           const newText = normalizeNewlines(e.currentTarget.innerText);
           const oldText = lastTextRef.current;
@@ -62,7 +83,7 @@ export default function TextBox({
           onChange(newText);
 
           if (isAppendOnly) {
-            scrollToBottom();
+            scrollToBottom(ref.current);
           }
 
           lastTextRef.current = newText;
