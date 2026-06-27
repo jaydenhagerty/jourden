@@ -4,7 +4,7 @@ import TextBox from "./components/TextBox";
 import { listenForAuth } from "./auth.js";
 import { db } from "./firebase.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFloppyDisk, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import {
   doc,
   setDoc,
@@ -16,6 +16,7 @@ import {
 function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(true);
   const [text, setText] = useState("");
 
   useEffect(() => {
@@ -45,6 +46,19 @@ function App() {
     initUser();
   }, [user]);
 
+  useEffect(() => {
+    if (authLoading) {
+      setShowLoadingOverlay(true);
+      return;
+    }
+
+    const id = setTimeout(() => {
+      setShowLoadingOverlay(false);
+    }, 400);
+
+    return () => clearTimeout(id);
+  }, [authLoading]);
+
   async function saveEntry() {
     if (!user || !text.trim()) return;
 
@@ -56,17 +70,8 @@ function App() {
     setText(""); // clear after save
   }
 
-  if (authLoading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-bg text-fg">
-        <div className="text-center">
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="relative">
+    <main className="relative min-h-screen">
       <nav className="sticky top-0 left-0 w-full flex flex-col z-10">
         <div className="w-full flex justify-between bg-bg h-20">
           <h1 className={`text-4xl font-fancy ${user ? "opacity-0" : "text-b3"}`}>
@@ -88,15 +93,45 @@ function App() {
         <div className="bg-linear-to-b from-bg to-transparent w-full h-16"></div>
       </nav>
 
-      <div className="flex justify-center items-center px-4 py-8">
-        <div className="w-full max-w-[1200px] text-3xl">
-          {user ? (
-            <TextBox value={text} onChange={setText} />
-          ) : (
-            <LoginButton onSignIn={setUser} />
-          )}
-        </div>
+      <div
+        className={`
+          flex
+          justify-center
+          items-center
+          px-4
+          py-8
+          transition-opacity
+          duration-300
+          ${authLoading ? "opacity-0 pointer-events-none" : "opacity-100"}
+        `}
+      >
+        
+        {user ? (
+          <TextBox value={text} onChange={setText} />
+        ) : (
+          <LoginButton onSignIn={setUser} />
+        )}
       </div>
+
+      {showLoadingOverlay && (
+        <div
+          className={`
+            fixed
+            inset-0
+            z-50
+            flex
+            items-center
+            justify-center
+            bg-bg
+            text-fg
+            transition-opacity
+            duration-400
+            ease-out
+            ${authLoading ? "opacity-100" : "opacity-0 pointer-events-none"}
+          `}
+        >
+        </div>
+      )}
 
       
     </main>

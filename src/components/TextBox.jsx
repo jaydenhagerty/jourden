@@ -45,40 +45,42 @@ export default function TextBox({
   }, [value]);
 
   return (
-    <p
-      ref={ref}
-      // inputMode="none"
-      contentEditable
-      data-placeholder={placeholder}
-      suppressContentEditableWarning
-      // onFocus={scrollToBottom}
-      onInput={(e) => {
-        const newText = normalizeNewlines(e.currentTarget.innerText);
-        const oldText = lastTextRef.current;
-        const isAppendOnly =
-          newText.length > oldText.length && newText.startsWith(oldText);
+    <div className="w-full max-w-[1200px] text-3xl">
+      <p
+        ref={ref}
+        // inputMode="none"
+        contentEditable
+        data-placeholder={placeholder}
+        suppressContentEditableWarning
+        // onFocus={scrollToBottom}
+        onInput={(e) => {
+          const newText = normalizeNewlines(e.currentTarget.innerText);
+          const oldText = lastTextRef.current;
+          const isAppendOnly =
+            newText.length > oldText.length && newText.startsWith(oldText);
 
-        onChange(newText);
+          onChange(newText);
 
-        if (isAppendOnly) {
-          scrollToBottom();
-        }
+          if (isAppendOnly) {
+            scrollToBottom();
+          }
 
-        lastTextRef.current = newText;
-      }}
-      className={`
-        border-none
-        outline-none
-        transition-all
-        duration-300
-        ease-in-out
-        w-full
-        h-full
-        p-4
-        rounded-lg
-        textbox-editable
-        ${value ? "" : "textbox-empty"}
-      `}
-    />
+          lastTextRef.current = newText;
+        }}
+        className={`
+          border-none
+          outline-none
+          transition-all
+          duration-300
+          ease-in-out
+          w-full
+          h-full
+          p-4
+          rounded-lg
+          textbox-editable
+          ${value ? "" : "textbox-empty"}
+        `}
+      />
+    </div>
   );
 }

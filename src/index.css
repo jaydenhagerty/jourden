@@ -7,9 +7,12 @@
     --font-sans: "Roboto Mono", monospace;
 
     --color-bg: #181c25;
-    --color-b2: #19212b;
+    --color-b2: #273242;
     --color-b3: #2e3d50;
+    --color-b4: #32495c;
     --color-fg: #ffffff;
+
+    --color-t1: #C1D5E0;
 }
 
 body {
