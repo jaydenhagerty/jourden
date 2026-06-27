@@ -101,7 +101,7 @@ function App() {
           justify-center
           items-center
           px-4
-          py-8
+          py-16
           transition-opacity
           duration-300
           ${authLoading ? "opacity-0 pointer-events-none" : "opacity-100"}
